@@ -1,0 +1,173 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
+
+export default function StudiesScreen({ navigation }) {
+
+  const [studies, setStudies] = useState([
+    {
+      id: '1',
+      subject: 'Matemática',
+      content: 'Estudar equação do 2º grau',
+      completed: false,
+    },
+    {
+      id: '2',
+      subject: 'Programação',
+      content: 'Revisar React Native',
+      completed: false,
+    },
+    {
+      id: '3',
+      subject: 'Português',
+      content: 'Estudar interpretação de texto',
+      completed: false,
+    },
+  ]);
+
+  function completeStudy(id) {
+    setStudies(
+      studies.map((study) =>
+        study.id === id
+          ? { ...study, completed: !study.completed }
+          : study
+      )
+    );
+  }
+
+  function renderStudy({ item }) {
+    return (
+      <View style={styles.studyCard}>
+
+        <Text style={styles.subject}>
+          {item.subject}
+        </Text>
+
+        <Text style={styles.content}>
+          {item.content}
+        </Text>
+
+        <TouchableOpacity
+          style={[
+            styles.button,
+            item.completed && styles.completedButton,
+          ]}
+          onPress={() => completeStudy(item.id)}
+        >
+          <Text style={styles.buttonText}>
+            {item.completed ? '✓ Concluído' : 'Concluir estudo'}
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+
+      <Text style={styles.title}>
+        Meus Estudos
+      </Text>
+
+      <Text style={styles.subtitle}>
+        Organize suas matérias e acompanhe seu progresso.
+      </Text>
+
+      <FlatList
+        data={studies}
+        keyExtractor={(item) => item.id}
+        renderItem={renderStudy}
+        showsVerticalScrollIndicator={false}
+      />
+
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => navigation.navigate('AddStudy')}
+      >
+        <Text style={styles.addButtonText}>
+          + Adicionar estudo
+        </Text>
+      </TouchableOpacity>
+
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F1FF',
+    padding: 20,
+  },
+
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#6C4AB6',
+    marginBottom: 5,
+  },
+
+  subtitle: {
+    fontSize: 15,
+    color: '#666',
+    marginBottom: 20,
+  },
+
+  studyCard: {
+    backgroundColor: '#FFFFFF',
+    padding: 18,
+    borderRadius: 16,
+    marginBottom: 15,
+    elevation: 3,
+  },
+
+  subject: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#6C4AB6',
+    marginBottom: 8,
+  },
+
+  content: {
+    fontSize: 15,
+    color: '#555',
+    marginBottom: 15,
+  },
+
+  button: {
+    backgroundColor: '#8E6BC7',
+    padding: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+
+  completedButton: {
+    backgroundColor: '#4CAF50',
+  },
+
+  buttonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+
+  addButton: {
+    backgroundColor: '#6C4AB6',
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 5,
+  },
+
+  addButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
